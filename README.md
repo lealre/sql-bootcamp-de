@@ -19,4 +19,5 @@ Duration: 4 weeks - 20 classes
 
 ### Classes
 
+- [Day 01 - Configuring the environment](https://github.com/lealre/sql-bootcamp-de/tree/main/01)
 
