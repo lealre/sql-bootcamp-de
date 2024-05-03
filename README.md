@@ -4,7 +4,7 @@ In this repository, I applied the concepts taught in the [Data Engineering SQL B
 
 We utilized PostgreSQL as our database system and PGAdmin as the client tool for interaction. 
 
-Each folder corresponds to a class where I practiced the concepts taught in PGAdmin and included some 
+Each folder corresponds to a class where I practiced the concepts taught in PGAdmin and included some notes.
 
 The database used is the [Northwind database for Postgres](https://github.com/pthom/northwind_psql).
 
