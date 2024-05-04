@@ -1,6 +1,6 @@
 # Day 01 - Configuring the environment
 
-The objective was to install PostgreSQL and create de tables from [Northwind database for Postgres](https://github.com/pthom/northwind_psql).
+The objective was to install PostgreSQL and create the tables from [Northwind database for Postgres](https://github.com/pthom/northwind_psql).
 
 ### Notes
 - [PostgreSQL documentation](https://www.postgresql.org/docs/current/index.html)
