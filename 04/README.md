@@ -1,10 +1,11 @@
-# Day 04 -  Window Functions
+# Day 04 - Window Functions
 
-The objectives was to perform Windows Functions in SQL.
+The objectives was to perform Window Functions in SQL.
 
 ### Challenge
 
 1. Rank the best-selling products using RANK(), DENSE_RANK(), and ROW_NUMBER() .This question has 2 implementations, see one that uses a subquery and one that does not use.
+
 ```sql
 SELECT  
   o.order_id, 
@@ -63,11 +64,15 @@ JOIN
 ```
 
 ### Notes
+
 - **Windows function** 
+
     - Calculations within specific partitions or rows.
     - Similar results to using `GROUP BY`, but does not reduce the number of rows.
     - Maintains the same number of rows while performing aggregation calculations, only adding new columns.
+
 - **Windows function structure**
+
     ```sql
     window_function_name(arg1, arg2, ...) OVER (
     [PARTITION BY partition_expression, ...]
@@ -79,7 +84,9 @@ JOIN
     - *OVER*: Main concept of window functions, it creates the "window" where our calculations are performed.
     - *PARTITION BY:* This optional clause divides the result set into partitions or groups. The window function operates independently within each partition.
     - *ORDER BY:* This optional clause specifies the order in which rows are processed within each partition. You can specify ascending (ASC) or descending (DESC) order.
+
 - **Example**
+
     ```sql
     -- Calculate: How many unique products are there? How many products in total? What is the total amount paid?
     -- With Group BY
@@ -98,17 +105,23 @@ JOIN
     FROM order_details
     ORDER BY order_id;
     ```
+
 - **Ranking Commands of Window Functions**
+
     - `ROW_NUMBER()` → Each row receives a unique value, regardless of being repeated values. The tie-breaking criterion is non-deterministic.
     - `RANK()` → Equal values receive the same rank, and the count continues by the number of rows (1, 1, 3, 4, 4, 6, ...).
     - `DENSE_RANK()` → Equal values receive the same rank, and the count continues by the rank sequence (1, 1, 2, 3, 4, 4, 5, ...).
     - `PERCENT_RANK()` and `CUME_DIST()` → Rankings on percentile of the distribution.
     - `NTILE(n)` → Divide the result set into a specified number of approximately equal parts or "buckets" and assigns a group number or "bucket" to each row based on its position within the ordered result set.
+
 - **Value Commands of Window Functions**
+
     - `LAG()` → Accesses the value of the previous row.
     - `LEAD()` → Accesses the value of the next row.
     - `FIRST_VALUE()`, `LAST_VALUE()`, `NTH_VALUE()`
+
 - **Other SQL commands**
+
     - `EXPLAIN ANALYSE` → Command to describe performance details of the query
 
 --------------
