@@ -1,4 +1,4 @@
-# Python Bootcamp for Data Engineering
+# SQL Bootcamp for Data Engineering and Analytics
 
 In this repository, I applied the concepts taught in the [Data Engineering SQL Bootcamp](https://github.com/lvgalvao/data-engineering-roadmap/tree/main/Bootcamp%20-%20SQL%20e%20Analytics) by [Luciano Galvão](https://github.com/lvgalvao).
 
