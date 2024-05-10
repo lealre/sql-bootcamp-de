@@ -17,9 +17,12 @@ Duration: 4 weeks - 20 classes
 
 ### Projects
 
+- [Project 01 - Analytic Report with SQL - Northwind database](https://github.com/lealre/northwind-analytics-sql)
+
 ### Classes
 
 - [Day 01 - Configuring the environment](https://github.com/lealre/sql-bootcamp-de/tree/main/01)
 - [Day 02 - First database queries](https://github.com/lealre/sql-bootcamp-de/tree/main/02)
 - [Day 03 - Joins and Having](https://github.com/lealre/sql-bootcamp-de/tree/main/03)
 - [Day 04 - Window Functions](https://github.com/lealre/sql-bootcamp-de/tree/main/04)
+- [Day 05 - Project 01 - Analytic Report with SQL - Northwind database](https://github.com/lealre/sql-bootcamp-de/tree/main/05)
