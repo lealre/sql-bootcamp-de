@@ -86,3 +86,5 @@ The objective was to understand the main difference between CTE, Subqueries, Vie
 | **Disk Space Usage**          | May occupy more disk space due to physical storage of data. | May occupy less disk space, as it stores only the query results, not raw data. |
 | **Flexibility**               | Data is updated in real-time and can be manipulated directly. | Query results are static and need to be manually updated. They are primarily used to store results of complex queries that do not change frequently. |
 
+--------------
+[Class Repository](https://github.com/lvgalvao/data-engineering-roadmap/tree/main/Bootcamp%20-%20SQL%20e%20Analytics/Aula-06)
