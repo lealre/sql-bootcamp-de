@@ -26,3 +26,4 @@ Duration: 4 weeks - 20 classes
 - [Day 03 - Joins and Having](https://github.com/lealre/sql-bootcamp-de/tree/main/03)
 - [Day 04 - Window Functions](https://github.com/lealre/sql-bootcamp-de/tree/main/04)
 - [Day 05 - Project 01 - Analytic Report with SQL - Northwind database](https://github.com/lealre/sql-bootcamp-de/tree/main/05)
+ - [Day 06 - CTE vs Subqueries vs Views vs Temporary Tables vs Materialized Views](https://github.com/lealre/sql-bootcamp-de/tree/main/06)
