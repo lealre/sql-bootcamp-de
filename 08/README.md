@@ -51,6 +51,97 @@
     ```sql
     CALL perform_transaction('d', 'car', 80000, 1);
     ```
+- **Stored Procedure example**
+    - Given the client and transactions tables below, we cannot allow transactions that cause the client's balance to fall below the credit. We agree that type = `'d'` is an operation that will debit from the client (purchase) and type = `'c'` will credit the client (sale).
+    ```sql
+    -- Create tables
+    CREATE TABLE IF NOT EXISTS clients (
+        id SERIAL PRIMARY KEY NOT NULL,
+        credit_limit INTEGER NOT NULL,
+        balance INTEGER NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS transactions (
+        id SERIAL PRIMARY KEY NOT NULL,
+        type CHAR(1) NOT NULL,
+        description VARCHAR(10) NOT NULL,
+        amount INTEGER NOT NULL,
+        client_id INTEGER NOT NULL,
+        performed_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
+    ```
+
+    - Therefore, we created the procedure below.
+    ```sql
+    CREATE OR REPLACE PROCEDURE perform_transaction(
+        IN p_type CHAR(1),
+        IN p_description VARCHAR(10),
+        IN p_amount INTEGER,
+        IN p_client_id INTEGER
+    )
+    LANGUAGE plpgsql
+    AS $$
+    DECLARE
+        current_balance INTEGER;
+        client_limit INTEGER;
+    BEGIN
+        -- Get the current balance and limit of the client
+        SELECT balance, credit_limit INTO current_balance, client_limit
+        FROM clients
+        WHERE id = p_client_id;
+        
+        -- Check if the transaction is valid based on the balance and limit
+        IF p_type = 'd' AND current_balance - p_amount < -client_limit THEN
+            RAISE EXCEPTION 'Insufficient balance to perform the transaction';
+        END IF;
+        
+        -- Check if the transaction is valid based on the balance and limit
+        IF p_type = 'd' AND current_balance - p_amount < -client_limit THEN
+            RAISE EXCEPTION 'Insufficient balance to perform the transaction';
+        END IF;
+        
+        -- Update the client's balance
+        UPDATE clients
+        SET balance = balance + CASE WHEN p_type = 'd' THEN -p_amount ELSE p_amount END
+        WHERE id = p_client_id;
+        
+        -- Insert a new transaction
+        INSERT INTO transactions (type, description, amount, client_id)
+        VALUES (p_type, p_description, p_amount, p_client_id);
+    END;
+    $$;
+    ```
+
+    - Given the values inserted by the table below, we tested the procedure.
+    ```sql
+    INSERT INTO clients (credit_limit, balance)
+    VALUES
+        (10000, 0),
+        (80000, 0),
+        (1000000, 0),
+        (10000000, 0),
+        (500000, 0);
+    ```
+    | id | credit_limit | balance |
+    |----|--------------|---------|
+    |  1 |        10000 |       0 |
+    |  2 |        80000 |       0 |
+    |  3 |      1000000 |       0 |
+    |  4 |     10000000 |       0 |
+    |  5 |       500000 |       0 |
+
+    - Using the client with `id` = 1, we test with a debit transaction (`'d'`) in the amount of 20000.
+    ```sql
+    CALL perform_transaction('d','buy', 20000, 1)
+    ```
+    ```
+    ERROR:  Insufficient balance to perform the transaction
+    CONTEXT:  PL/pgSQL function perform_transaction(character,character varying,integer,integer) line 18 at RAISE 
+
+    SQL state: P0001
+    ```
+
+
 
 --------------
 [Class Repository](https://github.com/lvgalvao/data-engineering-roadmap/tree/main/Bootcamp%20-%20SQL%20e%20Analytics/Aula-07)
