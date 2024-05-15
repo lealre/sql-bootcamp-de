@@ -49,7 +49,7 @@
 
     - Call the procedure
     ```sql
-    CALL realizar_transacao('d', 'carro', 80000, 1);
+    CALL perform_transaction('d', 'car', 80000, 1);
     ```
 
 --------------
