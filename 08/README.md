@@ -1,6 +1,123 @@
 # Day 08 - Stored Procedures
 
 
+## Challenge
+
+Create a stored procedure `'view_statement'` to provide a detailed view of a client's bank statement, including their current balance and information on the last 10 transactions. This operation takes the client's ID as input and returns a message with the client's current balance and a list of the last 10 transactions, including the transaction ID, transaction type (deposit or withdrawal), a brief description, the transaction amount, and the date it was conducted.
+
+1. Create table
+    ```sql
+    -- Create tables
+    CREATE TABLE IF NOT EXISTS clients (
+        id SERIAL PRIMARY KEY NOT NULL,
+        credit_limit INTEGER NOT NULL,
+        balance INTEGER NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS transactions (
+        id SERIAL PRIMARY KEY NOT NULL,
+        type CHAR(1) NOT NULL,
+        description VARCHAR(10) NOT NULL,
+        amount INTEGER NOT NULL,
+        client_id INTEGER NOT NULL,
+        performed_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
+    ```
+
+2. Insert random values
+    ```sql
+    -- Insert 20 rows with client_id = 1
+    INSERT INTO transactions (type, description, amount, client_id, performed_at)
+    VALUES
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days'));
+
+    -- Insert 20 rows with client_id = 2
+    INSERT INTO transactions (type, description, amount, client_id, performed_at)
+    VALUES
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
+        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days'));
+    ```
+
+3. Create proceure
+    ```sql
+    CREATE OR REPLACE PROCEDURE view_statement(
+    IN p_client_id INTEGER
+    )
+    LANGUAGE plpgsql
+    AS $$
+    DECLARE
+        current_balance INTEGER;
+        transaction_record RECORD;
+        counter INTEGER := 0;
+    BEGIN
+        -- Get the current balance of the client
+        SELECT balance INTO current_balance
+        FROM clients
+        WHERE id = p_client_id;
+
+        -- Return the current balance of the client
+        RAISE NOTICE 'Current balance of the client: %', current_balance;
+
+        -- Return the last 10 transactions of the client
+        RAISE NOTICE 'Last 10 transactions of the client:';
+        FOR transaction_record IN
+            SELECT *
+            FROM transactions
+            WHERE client_id = p_client_id
+            ORDER BY performed_at DESC
+            LIMIT 10
+        LOOP
+            counter := counter + 1;
+            RAISE NOTICE 'ID: %, Type: %, Description: %, Amount: %, Date: %', transaction_record.id, transaction_record.type, transaction_record.description, transaction_record.amount, transaction_record.performed_at;
+            EXIT WHEN counter >= 10;
+        END LOOP;
+    END;
+    $$;
+    ```
+
+4. Call procedure
+    ```sql
+    CALL view_statement(2)
+    ```
+
+
 ### Notes
 
 - Functions written directly in SQL.
