@@ -14,6 +14,15 @@ CREATE TABLE IF NOT EXISTS transactions (
     performed_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
+-- Insert clients info
+INSERT INTO clients (credit_limit, balance)
+VALUES
+    (10000, 0),
+    (80000, 0),
+    (1000000, 0),
+    (10000000, 0),
+    (500000, 0);
+
 -- insert random values values
 
 -- Insert 20 rows with client_id = 1
@@ -73,7 +82,6 @@ AS $$
 DECLARE
     current_balance INTEGER;
     transaction_record RECORD;
-    counter INTEGER := 0;
 BEGIN
     -- Get the current balance of the client
     SELECT balance INTO current_balance

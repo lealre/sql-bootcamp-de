@@ -5,7 +5,7 @@
 
 Create a stored procedure `'view_statement'` to provide a detailed view of a client's bank statement, including their current balance and information on the last 10 transactions. This operation takes the client's ID as input and returns a message with the client's current balance and a list of the last 10 transactions, including the transaction ID, transaction type (deposit or withdrawal), a brief description, the transaction amount, and the date it was conducted.
 
-1. Create table
+1. Create and insert values in tables.
     ```sql
     -- Create tables
     CREATE TABLE IF NOT EXISTS clients (
@@ -22,10 +22,16 @@ Create a stored procedure `'view_statement'` to provide a detailed view of a cli
         client_id INTEGER NOT NULL,
         performed_at TIMESTAMP NOT NULL DEFAULT NOW()
     );
-    ```
 
-2. Insert random values
-    ```sql
+    -- Insert clients info
+    INSERT INTO clients (credit_limit, balance)
+    VALUES
+        (10000, 0),
+        (80000, 0),
+        (1000000, 0),
+        (10000000, 0),
+        (500000, 0);
+
     -- Insert 20 rows with client_id = 1
     INSERT INTO transactions (type, description, amount, client_id, performed_at)
     VALUES
@@ -85,7 +91,6 @@ Create a stored procedure `'view_statement'` to provide a detailed view of a cli
     DECLARE
         current_balance INTEGER;
         transaction_record RECORD;
-        counter INTEGER := 0;
     BEGIN
         -- Get the current balance of the client
         SELECT balance INTO current_balance
@@ -115,6 +120,20 @@ Create a stored procedure `'view_statement'` to provide a detailed view of a cli
 4. Call procedure
     ```sql
     CALL view_statement(2)
+    ```
+    ```
+    NOTICE:  Current balance of the client: 0
+    NOTICE:  Last 10 transactions of the client:
+    NOTICE:  ID: 36, Type: c, Description: any, Amount: 1091, Date: 2024-05-11 00:45:04.517331
+    NOTICE:  ID: 34, Type: c, Description: any, Amount: 2951, Date: 2024-04-24 15:35:10.783397
+    NOTICE:  ID: 39, Type: d, Description: any, Amount: 5462, Date: 2024-04-15 08:58:19.821193
+    NOTICE:  ID: 23, Type: d, Description: any, Amount: 4654, Date: 2024-02-12 15:17:24.660285
+    NOTICE:  ID: 30, Type: c, Description: any, Amount: 2334, Date: 2024-02-09 17:31:33.918556
+    NOTICE:  ID: 27, Type: d, Description: any, Amount: 1796, Date: 2024-01-20 07:46:45.405118
+    NOTICE:  ID: 26, Type: c, Description: any, Amount: 1520, Date: 2023-12-08 09:19:04.186051
+    NOTICE:  ID: 33, Type: d, Description: any, Amount: 4882, Date: 2023-12-03 01:05:07.396912
+    NOTICE:  ID: 38, Type: c, Description: any, Amount: 4187, Date: 2023-11-20 19:51:30.38053
+    NOTICE:  ID: 37, Type: d, Description: any, Amount: 845, Date: 2023-10-27 20:38:15.961209
     ```
 
 
