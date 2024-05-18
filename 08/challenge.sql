@@ -23,55 +23,58 @@ VALUES
     (10000000, 0),
     (500000, 0);
 
--- insert random values values
+-- Stored procedure to create a transaction
+CREATE OR REPLACE PROCEDURE perform_transaction(
+    IN p_type CHAR(1),
+    IN p_description VARCHAR(10),
+    IN p_amount INTEGER,
+    IN p_client_id INTEGER
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    current_balance INTEGER;
+    client_limit INTEGER;
+BEGIN
+   -- Get the current balance and limit of the client
+    SELECT balance, credit_limit INTO current_balance, client_limit
+    FROM clients
+    WHERE id = p_client_id;
+    
+    -- Check if the transaction is valid based on the balance and limit
+    IF p_type = 'd' AND current_balance - p_amount < -client_limit THEN
+        RAISE EXCEPTION 'Insufficient balance to perform the transaction';
+    END IF;
+    
+    -- Check if the transaction is valid based on the balance and limit
+    IF p_type = 'd' AND current_balance - p_amount < -client_limit THEN
+        RAISE EXCEPTION 'Insufficient balance to perform the transaction';
+    END IF;
+    
+    -- Update the client's balance
+    UPDATE clients
+    SET balance = balance + CASE WHEN p_type = 'd' THEN -p_amount ELSE p_amount END
+    WHERE id = p_client_id;
+    
+    -- Insert a new transaction
+    INSERT INTO transactions (type, description, amount, client_id)
+    VALUES (p_type, p_description, p_amount, p_client_id);
+END;
+$$;
 
--- Insert 20 rows with client_id = 1
-INSERT INTO transactions (type, description, amount, client_id, performed_at)
-VALUES
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days'));
-
--- Insert 20 rows with client_id = 2
-INSERT INTO transactions (type, description, amount, client_id, performed_at)
-VALUES
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-    ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days'));
+-- Insert rows with client_id = 1
+    CALL perform_transaction('c','desc', 20000, 1);
+    CALL perform_transaction('c','desc', 20000, 1);
+    CALL perform_transaction('b','desc', 15000, 1);
+    CALL perform_transaction('c','desc', 2000, 1);
+    CALL perform_transaction('c','desc', 20000, 1);
+    CALL perform_transaction('b','desc', 1000, 1);
+    CALL perform_transaction('c','desc', 2000, 1);
+    CALL perform_transaction('b','desc', 20000, 1);
+    CALL perform_transaction('b','desc', 45621, 1);
+    CALL perform_transaction('c','desc', 20000, 1);
+    CALL perform_transaction('b','desc', 5000, 1);
+    CALL perform_transaction('c','desc', 20000, 1);
 
 -- create procedure
 CREATE OR REPLACE PROCEDURE view_statement(
@@ -106,4 +109,4 @@ END;
 $$;
 
 -- test procedure
-CALL view_statement(2)
+CALL view_statement(1)

@@ -5,83 +5,26 @@
 
 Create a stored procedure `'view_statement'` to provide a detailed view of a client's bank statement, including their current balance and information on the last 10 transactions. This operation takes the client's ID as input and returns a message with the client's current balance and a list of the last 10 transactions, including the transaction ID, transaction type (deposit or withdrawal), a brief description, the transaction amount, and the date it was conducted.
 
-1. Create and insert values in tables.
+All the SQL code is in [challenge.sql](challenge.sql) file.
+
+1. Using the [stored procedure example](stored_procedure_example.sql), we insert 10 transactions to use as example.
+
     ```sql
-    -- Create tables
-    CREATE TABLE IF NOT EXISTS clients (
-        id SERIAL PRIMARY KEY NOT NULL,
-        credit_limit INTEGER NOT NULL,
-        balance INTEGER NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS transactions (
-        id SERIAL PRIMARY KEY NOT NULL,
-        type CHAR(1) NOT NULL,
-        description VARCHAR(10) NOT NULL,
-        amount INTEGER NOT NULL,
-        client_id INTEGER NOT NULL,
-        performed_at TIMESTAMP NOT NULL DEFAULT NOW()
-    );
-
-    -- Insert clients info
-    INSERT INTO clients (credit_limit, balance)
-    VALUES
-        (10000, 0),
-        (80000, 0),
-        (1000000, 0),
-        (10000000, 0),
-        (500000, 0);
-
-    -- Insert 20 rows with client_id = 1
-    INSERT INTO transactions (type, description, amount, client_id, performed_at)
-    VALUES
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 1, NOW() - (RANDOM() * INTERVAL '365 days'));
-
-    -- Insert 20 rows with client_id = 2
-    INSERT INTO transactions (type, description, amount, client_id, performed_at)
-    VALUES
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('d', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days')),
-        ('c', 'any', (RANDOM() * 10000)::INTEGER, 2, NOW() - (RANDOM() * INTERVAL '365 days'));
+    CALL perform_transaction('c','desc', 20000, 1);
+    CALL perform_transaction('c','desc', 20000, 1);
+    CALL perform_transaction('b','desc', 15000, 1);
+    CALL perform_transaction('c','desc', 2000, 1);
+    CALL perform_transaction('c','desc', 20000, 1);
+    CALL perform_transaction('b','desc', 1000, 1);
+    CALL perform_transaction('c','desc', 2000, 1);
+    CALL perform_transaction('b','desc', 20000, 1);
+    CALL perform_transaction('b','desc', 45621, 1);
+    CALL perform_transaction('c','desc', 20000, 1);
+    CALL perform_transaction('b','desc', 5000, 1);
+    CALL perform_transaction('c','desc', 20000, 1);
     ```
 
-3. Create proceure
+3. Create procedure
     ```sql
     CREATE OR REPLACE PROCEDURE view_statement(
     IN p_client_id INTEGER
@@ -109,9 +52,7 @@ Create a stored procedure `'view_statement'` to provide a detailed view of a cli
             ORDER BY performed_at DESC
             LIMIT 10
         LOOP
-            counter := counter + 1;
             RAISE NOTICE 'ID: %, Type: %, Description: %, Amount: %, Date: %', transaction_record.id, transaction_record.type, transaction_record.description, transaction_record.amount, transaction_record.performed_at;
-            EXIT WHEN counter >= 10;
         END LOOP;
     END;
     $$;
@@ -119,21 +60,21 @@ Create a stored procedure `'view_statement'` to provide a detailed view of a cli
 
 4. Call procedure
     ```sql
-    CALL view_statement(2)
+    CALL view_statement(1)
     ```
     ```
-    NOTICE:  Current balance of the client: 0
+    NOTICE:  Current balance of the client: 190621
     NOTICE:  Last 10 transactions of the client:
-    NOTICE:  ID: 36, Type: c, Description: any, Amount: 1091, Date: 2024-05-11 00:45:04.517331
-    NOTICE:  ID: 34, Type: c, Description: any, Amount: 2951, Date: 2024-04-24 15:35:10.783397
-    NOTICE:  ID: 39, Type: d, Description: any, Amount: 5462, Date: 2024-04-15 08:58:19.821193
-    NOTICE:  ID: 23, Type: d, Description: any, Amount: 4654, Date: 2024-02-12 15:17:24.660285
-    NOTICE:  ID: 30, Type: c, Description: any, Amount: 2334, Date: 2024-02-09 17:31:33.918556
-    NOTICE:  ID: 27, Type: d, Description: any, Amount: 1796, Date: 2024-01-20 07:46:45.405118
-    NOTICE:  ID: 26, Type: c, Description: any, Amount: 1520, Date: 2023-12-08 09:19:04.186051
-    NOTICE:  ID: 33, Type: d, Description: any, Amount: 4882, Date: 2023-12-03 01:05:07.396912
-    NOTICE:  ID: 38, Type: c, Description: any, Amount: 4187, Date: 2023-11-20 19:51:30.38053
-    NOTICE:  ID: 37, Type: d, Description: any, Amount: 845, Date: 2023-10-27 20:38:15.961209
+    NOTICE:  ID: 1, Type: c, Description: desc, Amount: 20000, Date: 2024-05-18 19:33:52.349648
+    NOTICE:  ID: 2, Type: c, Description: desc, Amount: 20000, Date: 2024-05-18 19:33:52.349648
+    NOTICE:  ID: 3, Type: b, Description: desc, Amount: 15000, Date: 2024-05-18 19:33:52.349648
+    NOTICE:  ID: 4, Type: c, Description: desc, Amount: 2000, Date: 2024-05-18 19:33:52.349648
+    NOTICE:  ID: 5, Type: c, Description: desc, Amount: 20000, Date: 2024-05-18 19:33:52.349648
+    NOTICE:  ID: 6, Type: b, Description: desc, Amount: 1000, Date: 2024-05-18 19:33:52.349648
+    NOTICE:  ID: 7, Type: c, Description: desc, Amount: 2000, Date: 2024-05-18 19:33:52.349648
+    NOTICE:  ID: 8, Type: b, Description: desc, Amount: 20000, Date: 2024-05-18 19:33:52.349648
+    NOTICE:  ID: 9, Type: b, Description: desc, Amount: 45621, Date: 2024-05-18 19:33:52.349648
+    NOTICE:  ID: 10, Type: c, Description: desc, Amount: 20000, Date: 2024-05-18 19:33:52.349648
     ```
 
 
