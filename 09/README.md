@@ -1,5 +1,69 @@
 # Day 09 - Triggers 
 
+## Challenge
+
+In this challenge, you will implement a simple inventory management system for a store that sells T-shirts such as Basic, Data, and Summer. The store needs to ensure that sales are recorded only if there is sufficient stock to meet the orders. You will be responsible for creating a trigger in the database that prevents the insertion of sales that exceed the available quantity of products.
+
+1. Create tables
+    ```sql
+    -- Creation of the product table
+    CREATE TABLE product (
+        prod_code INT PRIMARY KEY,
+        description VARCHAR(50) UNIQUE,
+        available_quantity INT NOT NULL DEFAULT 0
+    );
+
+    -- Insertion of products
+    INSERT INTO product VALUES (1, 'Basic', 10);
+    INSERT INTO product VALUES (2, 'Data', 5);
+    INSERT INTO product VALUES (3, 'Summer', 15);
+
+    -- Creation of the sales_record table
+    CREATE TABLE sales_record (
+        sale_code SERIAL PRIMARY KEY,
+        prod_code INT,
+        quantity_sold INT,
+        FOREIGN KEY (prod_code) REFERENCES product(prod_code) ON DELETE CASCADE
+    );
+    ```
+
+2. Create trigger function
+    ```sql
+    CREATE OR REPLACE FUNCTION assert_stock()
+    RETURNS TRIGGER AS $$
+    DECLARE
+        current_quantity INTEGER;
+    BEGIN
+        -- get current quantity available
+        SELECT available_quantity INTO current_quantity
+        FROM product
+        WHERE prod_code = NEW.prod_code;
+        
+        -- Veritfy if transaction is possible
+        IF NEW.quantity_sold > current_quantity THEN
+            RAISE EXCEPTION 'No stock available';
+        ELSE
+            UPDATE product SET available_quantity = current_quantity - NEW.quantity_sold
+            WHERE prod_code = NEW.prod_code;
+        END IF;
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    CREATE TRIGGER trg_assert_stock
+    BEFORE INSERT ON sales_record
+    FOR EACH ROW
+    EXECUTE FUNCTION assert_stock();
+    ```
+
+3. Test trigger
+    ```sql
+    INSERT INTO sales_record (prod_code, quantity_sold) VALUES (1, 12);
+    ```
+    ```
+    ERROR:  No stock available
+    CONTEXT:  PL/pgSQL function assert_stock() line 12 at RAISE 
+    ```
 ## Notes
 - **Definition**: Triggers are stored procedures that are automatically executed or fired when specific events occur on a table or view. They are executed in response to events such as `INSERT`, `UPDATE`, or `DELETE`.
 
