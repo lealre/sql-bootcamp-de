@@ -18,6 +18,7 @@ Duration: 4 weeks - 20 classes
 ### Projects
 
 - [Project 01 - Analytic Report with SQL - Northwind database](https://github.com/lealre/northwind-analytics-sql)
+- [Project 02 - Automating Northwind database operations using PL/pgSQL - Stored Procedures and Triggers](https://github.com/lealre/northwind-PLpgSQL)
 
 ### Classes
 
