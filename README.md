@@ -31,3 +31,4 @@ Duration: 4 weeks - 20 classes
 - [Day 07 - DDL/DML Statements](https://github.com/lealre/sql-bootcamp-de/tree/main/07)
 - [Day 08 - Stored Procedures](https://github.com/lealre/sql-bootcamp-de/tree/main/08)
 - [Day 09 - Triggers](https://github.com/lealre/sql-bootcamp-de/tree/main/09)
+- [Day 10 - ACID Transactions](https://github.com/lealre/sql-bootcamp-de/tree/main/10)
