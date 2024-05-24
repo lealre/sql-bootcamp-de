@@ -52,4 +52,4 @@
         ```
     - The optimizer may reorder the steps of query execution to minimize resource usage, such as reducing disk I/O or avoiding unnecessary calculations.
 --------------
-[Class Repository](https://github.com/lvgalvao/data-engineering-roadmap/tree/main/Bootcamp%20-%20SQL%20e%20Analytics/Aula-10)
+[Class Repository](https://github.com/lvgalvao/data-engineering-roadmap/tree/main/Bootcamp%20-%20SQL%20e%20Analytics/Aula-11)
