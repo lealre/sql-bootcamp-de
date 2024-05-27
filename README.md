@@ -33,3 +33,5 @@ Duration: 4 weeks - 20 classes
 - [Day 09 - Triggers](https://github.com/lealre/sql-bootcamp-de/tree/main/09)
 - [Day 10 - ACID Transactions](https://github.com/lealre/sql-bootcamp-de/tree/main/10)
 - [Day 11 - Query Order](https://github.com/lealre/sql-bootcamp-de/tree/main/11)
+- [Day 12 - Database Indexing](https://github.com/lealre/sql-bootcamp-de/tree/main/12)
+- [Day 13 - Partition](https://github.com/lealre/sql-bootcamp-de/tree/main/13)
