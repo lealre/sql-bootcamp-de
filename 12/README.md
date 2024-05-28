@@ -12,6 +12,7 @@
 - **B-Tree Data Structures**
     - A B-Tree consists of nodes, where each node can have multiple keys and multiple pointers to other nodes. Each node has a minimum and maximum number of keys and pointers, maintaining the tree’s balance.
     - Are widely used in databases for indexes, such as primary and secondary key indexes, due to their efficiency and ability to handle large volumes of data.
+    - For B-tree indexes, the search time complexity is O(log N), where N is the number of entries in the index. This logarithmic complexity means that as the database grows, the search time increases logarithmically, not linearly. 
 
 - **Example**
     - Creating the table:
