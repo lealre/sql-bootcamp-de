@@ -29,6 +29,7 @@
         CREATE TABLE people_part4 PARTITION OF people FOR VALUES FROM (6000001) TO (8000001);
         CREATE TABLE people_part5 PARTITION OF people FOR VALUES FROM (8000001) TO (MAXVALUE);
         ```
+
     - List Partitioning: Ideal for discrete values or categories, like regions or departments.
         ```sql
         CREATE TABLE people (
