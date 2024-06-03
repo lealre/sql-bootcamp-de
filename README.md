@@ -9,10 +9,6 @@ Each folder corresponds to a class where I practiced the concepts taught in PGAd
 The database used is the [Northwind database for Postgres](https://github.com/pthom/northwind_psql).
 
 -------------------------
-
-Duration: 4 weeks - 20 classes
-
--------------------------
 # Contents
 
 ### Projects
@@ -35,3 +31,4 @@ Duration: 4 weeks - 20 classes
 - [Day 11 - Query Order](https://github.com/lealre/sql-bootcamp-de/tree/main/11)
 - [Day 12 - Database Indexing](https://github.com/lealre/sql-bootcamp-de/tree/main/12)
 - [Day 13 - Partition](https://github.com/lealre/sql-bootcamp-de/tree/main/13)
+- [Days 14 to 18 - DBT Project](https://github.com/lealre/sql-bootcamp-de/tree/main/dbt_project)
